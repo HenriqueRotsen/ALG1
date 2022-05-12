@@ -1,26 +1,24 @@
 #include <iostream>
 #include <string.h>
+#include <vector>
+
+
+#ifndef MAPA_H
+#define MAPA_H
 
 using namespace std;
 
 class Objeto
 {
-private:
+protected:
     int x;
     int y;
 public:
-    Objeto(int linha, int coluna): x(linha), y(coluna){}
-    virtual ~Objeto() {}
-    virtual void setX(int x) const = 0;
-    virtual int getX() const {
-        return x;
-    }
-    
-    virtual void sety(int y) const = 0;
-    virtual int gety() const {
-        return y;
-    }
-
+    Objeto(){x = -1; y = -1;}
+    virtual void setX(int x){this->x=x;};
+    virtual int getX(){return x;};
+    virtual void setY(int y){this->y=y;};
+    virtual int getY(){return y;};
 };
 
 class Visitante: public Objeto
@@ -28,24 +26,46 @@ class Visitante: public Objeto
 private:
     int id;
 public:
-    Visitante(/* args */);
-    ~Visitante();
+    Visitante() : Objeto() {};
+    void setId(int id){this->id=id;};
+    int getId(){return id;};
 };
 
-Visitante::Visitante(/* args */)
-{
-}
 
-Visitante::~Visitante()
+/*struct Objeto
 {
-}
+    int x;
+    int y;
+    int id;
+    string tipo;
+
+    int getX();
+    void setX(int x);
+
+    int getY();
+    void setY(int y);  
+
+    int getId();
+    void setId(int id);
+
+    string getTipo();
+    void setTipo(string tipo);
+};*/
+
+
 
 
 class Mapa
 {
 private:
-    Objeto ob*;
+    int n;
+    int m;
+    vector<vector<Objeto>> mapa;
 public:
-    Mapa(/* args */);
-    ~Mapa();
+    Mapa(){
+        mapa.resize(n,vector<Objeto>(m));
+    };
+    
 };
+
+#endif
