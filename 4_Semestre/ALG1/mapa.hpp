@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <queue>
+#include <iterator>
 
 #ifndef MAPA_H
 #define MAPA_H
@@ -33,18 +35,19 @@ class Visitante : public Objeto
 {
 private:
     int id;
-
+    vector<int> pref;
 public:
     Visitante() : Objeto(){};
     void setId(int id) { this->id = id; };
     int getId() { return id; };
+    void lerPreferencias(int id, int v);
 };
 
 class Bicicleta : public Objeto
 {
 private:
     int id;
-
+    vector<int> pref;
 public:
     Bicicleta() : Objeto(){};
     void setId(int id) { this->id = id; };
@@ -62,6 +65,11 @@ public:
     Mapa() {};
 
     void adicionarLinha(vector<Objeto> v);
+    void edge(int a, Objeto b);
+    void bfs(Objeto u);
+
+    Objeto getObjeto(int id);
+
 };
 
 //        mapa.resize(n, vector<Objeto>(m));

@@ -26,14 +26,14 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        cin >> input; //le a configuracao da linha
+        cin >> input; // le a configuracao da linha
         ob.setX(i);
         bic.setX(i);
         vis.setX(i);
 
         for (int j = 0; j < m; j++)
         {
-            
+
             ob.setY(j);
             bic.setY(j);
             vis.setY(j);
@@ -69,5 +69,39 @@ int main()
         }
         map.adicionarLinha(aux);
         aux.clear(); // limpa o vetor aux
+    }
+
+    int auxV[v][v];
+    int pref_bic[v][v];
+    int x;
+    for (int i = 0; i < v; i++)
+    {
+        for (int j = 0; j < v; j++)
+        {
+            cin >> x;
+            auxV[i][j] = x;
+        }
+    }
+
+    int maior, ctrl;
+    int pref_vist[v][v];
+    for (int i = 0; i < v; i++) // para cada visitante...
+    {
+        for (int j = 0; j < v; j++) // para cada preferencia...
+        {
+            pref_vist[i][j] = j + 1;
+            maior = auxV[i][j];
+
+            for (int k = 0; k < v; k++) // compare as preferencias
+            {
+                if (auxV[i][k] > maior)
+                {
+                    ctrl = k;
+                    maior = auxV[i][k];
+                    pref_vist[i][j] = k + 1; // adiciona o id da bicicleta de maior preferencia
+                }
+            }
+            auxV[i][ctrl] = 0;
+        }
     }
 }
