@@ -1,21 +1,22 @@
 #include "mapa.hpp"
 
-void Mapa::adicionarLinha(vector<Objeto> v)
+void Mapa::adicionarObjeto(Objeto o, int x, int y)
 {
-    mapa.push_back(v);
+    mapa[x][y] = o;
 }
 
-bool Mapa::isValid(vector<vector<bool>> vec, Objeto b)
+bool Mapa::isValid(vector<vector<bool>> vec, int x, int y)
 {
     // Fora dos limites
-    if (b.getX() < 0 || b.getY() < 0 || b.getX() >= this->n || b.getY() >= this->m)
+    if (x < 0 || y < 0 || x >= this->n || y >= this->m)
         return false;
 
     // Ja foi visitado
-    if (vec[b.getX()][b.getY()])
+    if (vec[x][y])
         return false;
 
-    if (b.getTipo() == "barreira")
+    Objeto aux = this->mapa[x][y];
+    if (aux.getTipo() == "barreira")
         return false;
 
     // Valido
@@ -25,7 +26,9 @@ bool Mapa::isValid(vector<vector<bool>> vec, Objeto b)
 vector<int> Mapa::bfs(Objeto b)
 {
     vector<vector<bool>> vec;
+    vec.resize(this->n, vector<bool>(this->m));
     vector<int> dist_vec;
+    dist_vec.resize(this->v);
 
     // Possiveis direcoes
     int dRow[] = {-1, 0, 1, 0};
@@ -51,7 +54,7 @@ vector<int> Mapa::bfs(Objeto b)
 
         if(this->mapa[x][y].getTipo() == "visitante")
         {
-            dist_vec[mapa[x][y].getId()] = dist;
+            dist_vec[mapa[x][y].getId()-1] = dist;
         }
 
         q.pop();
@@ -62,11 +65,10 @@ vector<int> Mapa::bfs(Objeto b)
             
             int adjx = x + dRow[i];
             int adjy = y + dCol[i];
-            Objeto aux = this->mapa[adjx][adjy];
 
-            if (isValid(vec, aux))
+            if (isValid(vec, adjx, adjy))
             {
-                q.push({{adjx, adjy}, dist + 1}); //########
+                q.push({{adjx, adjy}, dist+1}); //########
                 vec[adjx][adjy] = true;
             }
         }

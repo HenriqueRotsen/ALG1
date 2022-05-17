@@ -11,7 +11,7 @@ using namespace std;
 
 class Objeto
 {
-protected:
+private:
     int x;
     int y;
     int id;
@@ -22,6 +22,7 @@ public:
     {
         x = -1;
         y = -1;
+        id = -1;
         tipo = "vazio";
     }
     void setId(int id) { this->id = id; };
@@ -37,15 +38,23 @@ public:
 class Mapa
 {
 private:
+    int v;
     int n;
     int m;
     vector<vector<Objeto>> mapa;
 
 public:
-    Mapa(int n, int m) { mapa.resize(n, vector<Objeto>(m)); };
+    Mapa(int v, int n, int m) {
+        this->v = v;
+        this->n = n;
+        this->m = m;
+        mapa.resize(n, vector<Objeto>(m)); 
+    };
 
-    void adicionarLinha(vector<Objeto> v);
-    bool isValid(vector<vector<bool>> v, Objeto b);
+    void setV(int v) { this->v = v; };
+    int getV() { return v; };
+    void adicionarObjeto(Objeto, int x, int y);
+    bool isValid(vector<vector<bool>> v, int x, int y);
     vector<int> bfs(Objeto b);
 };
 

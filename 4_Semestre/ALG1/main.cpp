@@ -6,7 +6,6 @@ int main()
 {
     int v, n, m, valor;
     string input;
-    vector<Objeto> aux;
 
     Objeto ob;
 
@@ -21,7 +20,7 @@ int main()
     assert(1 <= m && m <= 1000);
 
     Objeto bic_vet[v];
-    Mapa map(n, m);
+    Mapa map(v, n, m);
 
     for (int i = 0; i < n; i++)
     {
@@ -30,45 +29,40 @@ int main()
 
         for (int j = 0; j < m; j++)
         {
-
+            ob.setId(-1);
             ob.setY(j);
 
             if (input.at(j) == '*')
             {
                 ob.setTipo("vazio");
-                aux.push_back(ob);
             }
             else if (input.at(j) == '-')
             {
                 ob.setTipo("barreira");
-                aux.push_back(ob);
             }
             else if ('a' <= input.at(j) && input.at(j) <= 'j')
             {
                 valor = (int)input.at(j) - 96;
                 ob.setId(valor);
                 ob.setTipo("visitante");
-                aux.push_back(ob);
             }
             else if ('0' <= input.at(j) && input.at(j) <= '9')
             {
-                valor = (int)input.at(j) + 1;
-                ob.setId(valor);
+                valor = input.at(j) - '0';
+                ob.setId(valor + 1);
                 ob.setTipo("bicicleta");
-                aux.push_back(ob);
-                bic_vet[ob.getId() - 1] = ob;
+                bic_vet[valor] = ob;
             }
             else
             {
                 cout << "\nERRO: Entrada invalida\n";
+                break;
             }
+            map.adicionarObjeto(ob, i, j);
         }
-        map.adicionarLinha(aux);
-        aux.clear(); // limpa o vetor aux
     }
 
     int auxV[v][v];
-    int pref_bic[v][v];
     int x;
     for (int i = 0; i < v; i++)
     {
@@ -111,24 +105,25 @@ int main()
         }
     }
 
-    int pref_aux[v][v];
-    for (int i = 0; i < v; i++) // para cada visitante...
+    int pref_bic[v][v];
+    int menor;
+    for (int i = 0; i < v; i++) // para cada bicicleta...
     {
-        for (int j = 0; j < v; j++) // para cada preferencia...
+        for (int j = 0; j < v; j++) // para cada aluno...
         {
-            pref_aux[i][j] = j + 1;
-            maior = auxB[i][j];
+            pref_bic[i][j] = j + 1;
+            menor = auxB[i][j];
 
-            for (int k = 0; k < v; k++) // compare as preferencias
+            for (int k = 0; k < v; k++) // compare as distancias
             {
-                if (auxB[i][k] > maior)
+                if (auxB[i][k] < menor)
                 {
                     ctrl = k;
-                    maior = auxB[i][k];
-                    pref_vist[i][j] = k + 1; // adiciona o id da bicicleta de maior preferencia
+                    menor = auxB[i][k];
+                    pref_bic[i][j] = k + 1; // adiciona o id do visitante de menor distancia
                 }
             }
-            auxB[i][ctrl] = 0;
+            auxB[i][ctrl] = 100;
         }
     }
 }
