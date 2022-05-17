@@ -75,3 +75,4 @@ vector<int> Mapa::bfs(Objeto b)
     }
     return dist_vec;
 }
+

@@ -79,7 +79,7 @@ int main()
     {
         for (int j = 0; j < v; j++) // para cada preferencia...
         {
-            pref_vist[i][j] = j + 1;
+            pref_vist[i][j] = j;
             maior = auxV[i][j];
 
             for (int k = 0; k < v; k++) // compare as preferencias
@@ -88,7 +88,7 @@ int main()
                 {
                     ctrl = k;
                     maior = auxV[i][k];
-                    pref_vist[i][j] = k + 1; // adiciona o id da bicicleta de maior preferencia
+                    pref_vist[i][j] = k; // adiciona o id da bicicleta de maior preferencia
                 }
             }
             auxV[i][ctrl] = 0;
@@ -111,7 +111,7 @@ int main()
     {
         for (int j = 0; j < v; j++) // para cada aluno...
         {
-            pref_bic[i][j] = j + 1;
+            pref_bic[i][j] = j;
             menor = auxB[i][j];
 
             for (int k = 0; k < v; k++) // compare as distancias
@@ -120,10 +120,50 @@ int main()
                 {
                     ctrl = k;
                     menor = auxB[i][k];
-                    pref_bic[i][j] = k + 1; // adiciona o id do visitante de menor distancia
+                    pref_bic[i][j] = k; // adiciona o id do visitante de menor distancia
                 }
             }
             auxB[i][ctrl] = 100;
         }
+    }
+
+    queue<int> freeVis; //vistantes sem match
+    int i, j, current_bic, current_vis;
+    int next[v];  // qual bicicleta sera proposta para cada visitante
+    int matches[v]; // o atual casamento de cada bicileta
+
+    for (i = 0; i < v; i++)
+    {
+        freeVis.push(i);
+        next[i] = 0;
+        matches[i] = -1;
+    }
+
+    while (!freeVis.empty())
+    {
+        current_vis = freeVis.front();
+        current_bic = pref_vist[current_vis][next[current_vis]];
+
+        if (matches[current_bic] == -1)
+        {
+            matches[current_bic] = current_vis;
+            freeVis.pop();
+        }
+        else if (pref_bic[current_bic][current_vis] < pref_bic[current_bic][matches[current_bic]])
+        {
+            int ex_man = matches[current_bic];
+            freeVis.pop();
+            matches[current_bic] = current_vis;
+            freeVis.push(ex_man);
+        }
+
+        next[current_vis]++;
+    }
+    
+    char c;
+    for (i = 0; i < v; i++)
+    {
+        c = matches[i]+97;
+        cout << endl << c << " " << i << endl;
     }
 }
