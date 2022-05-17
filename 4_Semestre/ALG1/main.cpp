@@ -1,6 +1,7 @@
 #include "mapa.hpp"
 #include <assert.h>
 #include <string.h>
+#include <map>
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
     assert(1 <= m && m <= 1000);
 
     Objeto bic_vet[v];
-    Mapa map(v, n, m);
+    Mapa lagoa(v, n, m);
 
     for (int i = 0; i < n; i++)
     {
@@ -58,7 +59,7 @@ int main()
                 cout << "\nERRO: Entrada invalida\n";
                 break;
             }
-            map.adicionarObjeto(ob, i, j);
+            lagoa.adicionarObjeto(ob, i, j);
         }
     }
 
@@ -98,7 +99,7 @@ int main()
     int auxB[v][v];
     for (int i = 0; i < v; i++)
     {
-        vector<int> temp = map.bfs(bic_vet[i]);
+        vector<int> temp = lagoa.bfs(bic_vet[i]);
         for (int j = 0; j < v; j++)
         {
             auxB[i][j] = temp[j];
@@ -127,9 +128,9 @@ int main()
         }
     }
 
-    queue<int> freeVis; //vistantes sem match
+    queue<int> freeVis; // vistantes sem match
     int i, j, current_bic, current_vis;
-    int next[v];  // qual bicicleta sera proposta para cada visitante
+    int next[v];    // qual bicicleta sera proposta para cada visitante
     int matches[v]; // o atual casamento de cada bicileta
 
     for (i = 0; i < v; i++)
@@ -159,11 +160,14 @@ int main()
 
         next[current_vis]++;
     }
-    
-    char c;
+
+    map<string, int> resp;
+    string c;
     for (i = 0; i < v; i++)
     {
-        c = matches[i]+97;
-        cout << endl << c << " " << i << endl;
+        c = matches[i] + 97;
+        resp[c] = i;
     }
+    for (map<string, int>::iterator it = resp.begin(); it != resp.end(); it++)
+        cout << it->first << " " << it->second << endl;
 }
