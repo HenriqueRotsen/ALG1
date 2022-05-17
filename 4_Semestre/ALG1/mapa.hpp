@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <queue>
+#include <iterator>
 
 #ifndef MAPA_H
 #define MAPA_H
@@ -9,9 +11,10 @@ using namespace std;
 
 class Objeto
 {
-protected:
+private:
     int x;
     int y;
+    int id;
     string tipo;
 
 public:
@@ -19,51 +22,40 @@ public:
     {
         x = -1;
         y = -1;
+        id = -1;
         tipo = "vazio";
     }
-    virtual void setX(int x) { this->x = x; };
-    virtual int getX() { return x; };
-    virtual void setY(int y) { this->y = y; };
-    virtual int getY() { return y; };
-    virtual void setTipo(string t) { this->tipo = t;};
-    virtual string getTipo() { return tipo; };
-};
-
-class Visitante : public Objeto
-{
-private:
-    int id;
-
-public:
-    Visitante() : Objeto(){};
     void setId(int id) { this->id = id; };
     int getId() { return id; };
-};
-
-class Bicicleta : public Objeto
-{
-private:
-    int id;
-
-public:
-    Bicicleta() : Objeto(){};
-    void setId(int id) { this->id = id; };
-    int getId() { return id; };
+    void setX(int x) { this->x = x; };
+    int getX() { return x; };
+    void setY(int y) { this->y = y; };
+    int getY() { return y; };
+    void setTipo(string t) { this->tipo = t; };
+    string getTipo() { return tipo; };
 };
 
 class Mapa
 {
 private:
+    int v;
     int n;
     int m;
     vector<vector<Objeto>> mapa;
 
 public:
-    Mapa() {};
+    Mapa(int v, int n, int m) {
+        this->v = v;
+        this->n = n;
+        this->m = m;
+        mapa.resize(n, vector<Objeto>(m)); 
+    };
 
-    void adicionarLinha(vector<Objeto> v);
+    void setV(int v) { this->v = v; };
+    int getV() { return v; };
+    void adicionarObjeto(Objeto, int x, int y);
+    bool isValid(vector<vector<bool>> v, int x, int y);
+    vector<int> bfs(Objeto b);
 };
-
-//        mapa.resize(n, vector<Objeto>(m));
 
 #endif
