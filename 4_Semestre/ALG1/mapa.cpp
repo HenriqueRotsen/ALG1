@@ -1,49 +1,75 @@
 #include "mapa.hpp"
 
-vector<bool> vec;
-
 void Mapa::adicionarLinha(vector<Objeto> v)
 {
     mapa.push_back(v);
 }
 
-
-
-
-
-
-
-
-
-
-void Mapa::edge(int a, Objeto b)
+bool Mapa::isValid(vector<vector<bool>> vec, Objeto b)
 {
-    mapa[a].push_back(b);
-  
-    // for undirected graph add this line
-    // g[b].push_back(a);
+    // Fora dos limites
+    if (b.getX() < 0 || b.getY() < 0 || b.getX() >= this->n || b.getY() >= this->m)
+        return false;
+
+    // Ja foi visitado
+    if (vec[b.getX()][b.getY()])
+        return false;
+
+    if (b.getTipo() == "barreira")
+        return false;
+
+    // Valido
+    return true;
 }
-  
-/*void Mapa::bfs(Objeto u)
+
+vector<int> Mapa::bfs(Objeto b)
 {
-    queue<Objeto> q;
-  
-    q.push(u);
-    v[u] = true;
-  
-    while (!q.empty()) {
-  
-        int f = q.front();
+    vector<vector<bool>> vec;
+    vector<int> dist_vec;
+
+    // Possiveis direcoes
+    int dRow[] = {-1, 0, 1, 0};
+    int dCol[] = {0, 1, 0, -1};
+
+    // Guarda indices e distancia da celula mae
+    queue<pair<pair<int, int>, int>> q;
+
+    // Marca a primeira celula como visitada
+    // e coloca na fila
+    q.push({{b.getX(), b.getY()}, 0});
+    vec[b.getX()][b.getY()] = true;
+
+    // Iterate while the queue
+    // is not empty
+    while (!q.empty())
+    {
+
+        pair<pair<int, int>, int> cell = q.front();
+        int x = cell.first.first;
+        int y = cell.first.second;
+        int dist = cell.second;
+
+        if(this->mapa[x][y].getTipo() == "visitante")
+        {
+            dist_vec[mapa[x][y].getId()] = dist;
+        }
+
         q.pop();
-  
-        cout << f << " ";
-  
-        // Enqueue all adjacent of f and mark them visited 
-        for (auto i = mapa[f].begin(); i != mapa[f].end(); i++) {
-            if (!v[*i]) {
-                q.push(*i);
-                v[*i] = true;
+
+        // Vai para as celulas adjacentes
+        for (int i = 0; i < 4; i++)
+        {
+            
+            int adjx = x + dRow[i];
+            int adjy = y + dCol[i];
+            Objeto aux = this->mapa[adjx][adjy];
+
+            if (isValid(vec, aux))
+            {
+                q.push({{adjx, adjy}, dist + 1}); //########
+                vec[adjx][adjy] = true;
             }
         }
     }
-}*/
+    return dist_vec;
+}

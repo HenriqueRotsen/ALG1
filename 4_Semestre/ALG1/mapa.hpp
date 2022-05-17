@@ -14,6 +14,7 @@ class Objeto
 protected:
     int x;
     int y;
+    int id;
     string tipo;
 
 public:
@@ -23,35 +24,14 @@ public:
         y = -1;
         tipo = "vazio";
     }
-    virtual void setX(int x) { this->x = x; };
-    virtual int getX() { return x; };
-    virtual void setY(int y) { this->y = y; };
-    virtual int getY() { return y; };
-    virtual void setTipo(string t) { this->tipo = t;};
-    virtual string getTipo() { return tipo; };
-};
-
-class Visitante : public Objeto
-{
-private:
-    int id;
-    vector<int> pref;
-public:
-    Visitante() : Objeto(){};
     void setId(int id) { this->id = id; };
     int getId() { return id; };
-    void lerPreferencias(int id, int v);
-};
-
-class Bicicleta : public Objeto
-{
-private:
-    int id;
-    vector<int> pref;
-public:
-    Bicicleta() : Objeto(){};
-    void setId(int id) { this->id = id; };
-    int getId() { return id; };
+    void setX(int x) { this->x = x; };
+    int getX() { return x; };
+    void setY(int y) { this->y = y; };
+    int getY() { return y; };
+    void setTipo(string t) { this->tipo = t; };
+    string getTipo() { return tipo; };
 };
 
 class Mapa
@@ -62,16 +42,11 @@ private:
     vector<vector<Objeto>> mapa;
 
 public:
-    Mapa() {};
+    Mapa(int n, int m) { mapa.resize(n, vector<Objeto>(m)); };
 
     void adicionarLinha(vector<Objeto> v);
-    void edge(int a, Objeto b);
-    void bfs(Objeto u);
-
-    Objeto getObjeto(int id);
-
+    bool isValid(vector<vector<bool>> v, Objeto b);
+    vector<int> bfs(Objeto b);
 };
-
-//        mapa.resize(n, vector<Objeto>(m));
 
 #endif

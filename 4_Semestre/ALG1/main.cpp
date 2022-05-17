@@ -8,11 +8,7 @@ int main()
     string input;
     vector<Objeto> aux;
 
-    Visitante vis;
-    Bicicleta bic;
     Objeto ob;
-
-    Mapa map;
 
     cout << "Entrar com numero de vititantes/bicicletas: ";
     cin >> v;
@@ -24,19 +20,18 @@ int main()
     cin >> m;
     assert(1 <= m && m <= 1000);
 
+    Objeto bic_vet[v];
+    Mapa map(n, m);
+
     for (int i = 0; i < n; i++)
     {
         cin >> input; // le a configuracao da linha
         ob.setX(i);
-        bic.setX(i);
-        vis.setX(i);
 
         for (int j = 0; j < m; j++)
         {
 
             ob.setY(j);
-            bic.setY(j);
-            vis.setY(j);
 
             if (input.at(j) == '*')
             {
@@ -51,16 +46,17 @@ int main()
             else if ('a' <= input.at(j) && input.at(j) <= 'j')
             {
                 valor = (int)input.at(j) - 96;
-                vis.setId(valor);
-                vis.setTipo("visitante");
-                aux.push_back(vis);
+                ob.setId(valor);
+                ob.setTipo("visitante");
+                aux.push_back(ob);
             }
             else if ('0' <= input.at(j) && input.at(j) <= '9')
             {
                 valor = (int)input.at(j) + 1;
-                bic.setId(valor);
-                bic.setTipo("bicicleta");
-                aux.push_back(bic);
+                ob.setId(valor);
+                ob.setTipo("bicicleta");
+                aux.push_back(ob);
+                bic_vet[ob.getId() - 1] = ob;
             }
             else
             {
@@ -102,6 +98,37 @@ int main()
                 }
             }
             auxV[i][ctrl] = 0;
+        }
+    }
+
+    int auxB[v][v];
+    for (int i = 0; i < v; i++)
+    {
+        vector<int> temp = map.bfs(bic_vet[i]);
+        for (int j = 0; j < v; j++)
+        {
+            auxB[i][j] = temp[j];
+        }
+    }
+
+    int pref_aux[v][v];
+    for (int i = 0; i < v; i++) // para cada visitante...
+    {
+        for (int j = 0; j < v; j++) // para cada preferencia...
+        {
+            pref_aux[i][j] = j + 1;
+            maior = auxB[i][j];
+
+            for (int k = 0; k < v; k++) // compare as preferencias
+            {
+                if (auxB[i][k] > maior)
+                {
+                    ctrl = k;
+                    maior = auxB[i][k];
+                    pref_vist[i][j] = k + 1; // adiciona o id da bicicleta de maior preferencia
+                }
+            }
+            auxB[i][ctrl] = 0;
         }
     }
 }
