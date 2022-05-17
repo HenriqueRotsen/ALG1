@@ -44,12 +44,11 @@ private:
     vector<vector<Objeto>> mapa;
 
 public:
-    Mapa(int v, int n, int m)
-    {
+    Mapa(int v, int n, int m) {
         this->v = v;
         this->n = n;
         this->m = m;
-        mapa.resize(n, vector<Objeto>(m));
+        mapa.resize(n, vector<Objeto>(m)); 
     };
 
     void setV(int v) { this->v = v; };

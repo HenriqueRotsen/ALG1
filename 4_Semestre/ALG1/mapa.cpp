@@ -52,9 +52,9 @@ vector<int> Mapa::bfs(Objeto b)
         int y = cell.first.second;
         int dist = cell.second;
 
-        if (this->mapa[x][y].getTipo() == "visitante")
+        if(this->mapa[x][y].getTipo() == "visitante")
         {
-            dist_vec[mapa[x][y].getId() - 1] = dist;
+            dist_vec[mapa[x][y].getId()-1] = dist;
         }
 
         q.pop();
@@ -62,13 +62,13 @@ vector<int> Mapa::bfs(Objeto b)
         // Vai para as celulas adjacentes
         for (int i = 0; i < 4; i++)
         {
-
+            
             int adjx = x + dRow[i];
             int adjy = y + dCol[i];
 
             if (isValid(vec, adjx, adjy))
             {
-                q.push({{adjx, adjy}, dist + 1}); //########
+                q.push({{adjx, adjy}, dist+1}); //########
                 vec[adjx][adjy] = true;
             }
         }

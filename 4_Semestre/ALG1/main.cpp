@@ -128,9 +128,9 @@ int main()
         }
     }
 
-    queue<int> freeVis; // vistantes sem match
+    queue<int> freeVis; //vistantes sem match
     int i, j, current_bic, current_vis;
-    int next[v];    // qual bicicleta sera proposta para cada visitante
+    int next[v];  // qual bicicleta sera proposta para cada visitante
     int matches[v]; // o atual casamento de cada bicileta
 
     for (i = 0; i < v; i++)
@@ -165,9 +165,10 @@ int main()
     string c;
     for (i = 0; i < v; i++)
     {
-        c = matches[i] + 97;
+        c = matches[i]+97;
         resp[c] = i;
     }
     for (map<string, int>::iterator it = resp.begin(); it != resp.end(); it++)
-        cout << it->first << " " << it->second << endl;
+            cout << it->first << " " << it->second << endl;
+
 }
