@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 #include <map>
+#include <list>
 
 int main()
 {
@@ -10,13 +11,13 @@ int main()
 
     Objeto ob;
 
-    cout << "Entrar com numero de vititantes/bicicletas: ";
+    // cout << "Entrar com numero de vititantes/bicicletas: ";
     cin >> v;
     assert(1 <= v && v <= 10);
-    cout << "Entrar com numero de linhas do mapa: ";
+    // cout << "Entrar com numero de linhas do mapa: ";
     cin >> n;
     assert(1 <= n && n <= 1000);
-    cout << "Entrar com numero de colunas do mapa: ";
+    // cout << "Entrar com numero de colunas do mapa: ";
     cin >> m;
     assert(1 <= m && m <= 1000);
 
@@ -74,46 +75,47 @@ int main()
         }
     }
 
-    int maior, ctrl;
+    int maior, ctrl = 0;
     int pref_vist[v][v];
     for (int i = 0; i < v; i++) // para cada visitante...
     {
         for (int j = 0; j < v; j++) // para cada preferencia...
         {
-            pref_vist[i][j] = j;
             maior = auxV[i][j];
-
+            ctrl = j;
             for (int k = 0; k < v; k++) // compare as preferencias
             {
                 if (auxV[i][k] > maior)
                 {
                     ctrl = k;
                     maior = auxV[i][k];
-                    pref_vist[i][j] = k; // adiciona o id da bicicleta de maior preferencia
                 }
             }
+            pref_vist[i][j] = ctrl; // adiciona o id da bicicleta de maior preferencia
             auxV[i][ctrl] = 0;
         }
     }
 
     int auxB[v][v];
+    int distancia[v][v];
     for (int i = 0; i < v; i++)
     {
         vector<int> temp = lagoa.bfs(bic_vet[i]);
         for (int j = 0; j < v; j++)
         {
             auxB[i][j] = temp[j];
+            distancia[i][j] = temp[j];
         }
     }
 
     int pref_bic[v][v];
-    int menor;
+    int menor = 100;
     for (int i = 0; i < v; i++) // para cada bicicleta...
     {
         for (int j = 0; j < v; j++) // para cada aluno...
         {
-            pref_bic[i][j] = j;
             menor = auxB[i][j];
+            ctrl = j;
 
             for (int k = 0; k < v; k++) // compare as distancias
             {
@@ -121,21 +123,22 @@ int main()
                 {
                     ctrl = k;
                     menor = auxB[i][k];
-                    pref_bic[i][j] = k; // adiciona o id do visitante de menor distancia
                 }
             }
+            pref_bic[i][j] = ctrl; // adiciona o id do visitante de menor distancia
             auxB[i][ctrl] = 100;
         }
     }
 
-    queue<int> freeVis; //vistantes sem match
-    int i, j, current_bic, current_vis;
-    int next[v];  // qual bicicleta sera proposta para cada visitante
+    list<int> freeVis; // vistantes sem match
+    int i, current_bic, current_vis;
+    int next[v];    // qual bicicleta sera proposta para cada visitante
     int matches[v]; // o atual casamento de cada bicileta
-
+    int ex_vis;
+    
     for (i = 0; i < v; i++)
     {
-        freeVis.push(i);
+        freeVis.push_back(i);
         next[i] = 0;
         matches[i] = -1;
     }
@@ -145,17 +148,27 @@ int main()
         current_vis = freeVis.front();
         current_bic = pref_vist[current_vis][next[current_vis]];
 
-        if (matches[current_bic] == -1)
+        if (matches[current_bic] == -1) // se esta vazio
         {
             matches[current_bic] = current_vis;
-            freeVis.pop();
+            freeVis.pop_front();
         }
-        else if (pref_bic[current_bic][current_vis] < pref_bic[current_bic][matches[current_bic]])
+        else if (distancia[current_bic][current_vis] < distancia[current_bic][matches[current_bic]]) // compara as distancias
         {
-            int ex_man = matches[current_bic];
-            freeVis.pop();
+            ex_vis = matches[current_bic];
+            freeVis.pop_front();
             matches[current_bic] = current_vis;
-            freeVis.push(ex_man);
+            freeVis.push_front(ex_vis);
+        }
+        else if (distancia[current_bic][current_vis] == distancia[current_bic][matches[current_bic]]) // distancias iguais
+        {
+            if (current_vis < matches[current_bic]) // se o id de quem esta oferecendo for menor
+            {
+                ex_vis = matches[current_bic];
+                freeVis.pop_front();
+                matches[current_bic] = current_vis;
+                freeVis.push_front(ex_vis);
+            }
         }
 
         next[current_vis]++;
@@ -165,10 +178,10 @@ int main()
     string c;
     for (i = 0; i < v; i++)
     {
-        c = matches[i]+97;
+        c = matches[i] + 97;
         resp[c] = i;
     }
     for (map<string, int>::iterator it = resp.begin(); it != resp.end(); it++)
-            cout << it->first << " " << it->second << endl;
-
+        cout << it->first << " " << it->second << endl;
 }
+
