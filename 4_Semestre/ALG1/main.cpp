@@ -97,36 +97,12 @@ int main()
     }
 
     int auxB[v][v];
-    int distancia[v][v];
     for (int i = 0; i < v; i++)
     {
         vector<int> temp = lagoa.bfs(bic_vet[i]);
         for (int j = 0; j < v; j++)
         {
             auxB[i][j] = temp[j];
-            distancia[i][j] = temp[j];
-        }
-    }
-
-    int pref_bic[v][v];
-    int menor = 100;
-    for (int i = 0; i < v; i++) // para cada bicicleta...
-    {
-        for (int j = 0; j < v; j++) // para cada aluno...
-        {
-            menor = auxB[i][j];
-            ctrl = j;
-
-            for (int k = 0; k < v; k++) // compare as distancias
-            {
-                if (auxB[i][k] < menor)
-                {
-                    ctrl = k;
-                    menor = auxB[i][k];
-                }
-            }
-            pref_bic[i][j] = ctrl; // adiciona o id do visitante de menor distancia
-            auxB[i][ctrl] = 100;
         }
     }
 
@@ -153,14 +129,14 @@ int main()
             matches[current_bic] = current_vis;
             freeVis.pop_front();
         }
-        else if (distancia[current_bic][current_vis] < distancia[current_bic][matches[current_bic]]) // compara as distancias
+        else if (auxB[current_bic][current_vis] < auxB[current_bic][matches[current_bic]]) // compara as distancias
         {
             ex_vis = matches[current_bic];
             freeVis.pop_front();
             matches[current_bic] = current_vis;
             freeVis.push_front(ex_vis);
         }
-        else if (distancia[current_bic][current_vis] == distancia[current_bic][matches[current_bic]]) // distancias iguais
+        else if (auxB[current_bic][current_vis] == auxB[current_bic][matches[current_bic]]) // distancias iguais
         {
             if (current_vis < matches[current_bic]) // se o id de quem esta oferecendo for menor
             {
